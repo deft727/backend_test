@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>{{ category.name }}</h2>
+
+
+    <div class="row">
+
+        {% for product in category %}
+      
+          <div class="col-sm-6 col-md-4 col-lg-3"> 
+            <a href="{{product.get_absolute_url}}" class="thumbnail">
+               <img src="{{product.image.url}}" width="111" alt="{{product.name}}">
+            </a>
+            <p>{{product.price}} $   <strong>{{product.name}}</strong></p>
+             
+      <form action="{%url 'products:like_toggle' product.id %}" method="POST">
+        {%csrf_token%}
+      <button type="submit"><p>like({{product.likes.all.count}})</p></button>
+    </form>
+            <a href="{{product.get_absolute_url}}" >Detail</a><br>
+          </div>
+          {%endfor%}
+        </div>
+        <nav>
+          <ul class="pagination">
+        {%if page_obj.has_previous %}
+        <li>
+        <a href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
+        <span aria-hidden="true"><i class="ion-ios-arrow-left"></i></span>
+        </a>
+        {%endif%}
+            {%for p in paginator.page_range%}
+            {% if page_obj.number == p %}
+            <li class="active"><a href="?page={{p}}">{{p}}</a></li>
+            {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+            <li><a href="?page={{p}}">{{p}}</a></li>
+            </li>
+            {%endif%}
+            {%endfor%}
+        {%if page_obj.has_next %}
+        <li>
+        <a href="?page={{page_obj.next_page_number}}" aria-label="Next">
+        <span aria-hidden="true"><i class="ion-ios-arrow-right"></i></span>
+        </a>
+        </li>
+        {%endif%}
+          </ul>
+        </nav>
+  
+{% endblock content %}

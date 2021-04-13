@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <h3>Cart</h3>
+    {% for key,value in request.session.cart.items %}
+    <div>
+    <strong>{{value.name}}</strong>
+      <img src="{{value.image}}" width="120" alt=""> 
+      <b>{{value.price}} $</b>
+      Total {{cart_total_amount}}
+
+      quantity: {{value.quantity}} 
+
+      <a href="{% url 'products:item_decrement' value.product_id %}">-</a>
+      
+      <a href="{% url 'products:item_increment' value.product_id %}">+</a>
+
+      &emsp; <a href="{% url 'products:item_clear' value.product_id %}"></i> Delete </a>
+
+
+    </div>
+           <br>     
+    {% endfor %}
+    <br>
+    <br>
+    <br>
+    {%if request.session.cart|length > 0%}
+    <button><a href="{% url 'products:cart_clear' %}">Clear Cart</a></button>
+<br>
+<br>
+<br>
+    <button><a href="{%url 'payments:checkout'%}">checkout</a></button>
+    {%else%}
+    <h3>cart is empty</h3>
+    {%endif%}
+    
+{% endblock %}

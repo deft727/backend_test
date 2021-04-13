@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load product_tags %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h1>{{ product.name }}</h1>
+<h5>{{ product.price }} $</h5>
+<img src="{{product.image.url}}" alt="{{ product.name }}">
+<h5>{{ product.description|safe }}</h5>
+<h6>Likes {{ product.likes.count }}</h6>
+
+<button type="button"> <a href="{% url 'products:cart_add' product.id %}">Add To Cart</a></button>
+
+</form>
+<h3>Comments ({{product.comments.all.count}})</h3>
+{%for comment in product.comments.all%}
+<p>{{comment.text}}</p>
+{%endfor%}
+
+
+
+<h3>Add comment</h3>
+<div  style="max-width: 175.98px; ">
+<form action="{%url 'products:add_comment' product.id%}"  method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit">Add comment</button>
+  </form>
+</div>
+
+<h3>Popular</h3>
+<ul class="list-group">
+{% for product in popular %}
+    <li class="list-group-item">
+        <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+    </li>
+{% endfor %}
+</ul>
+
+{% endblock content %}

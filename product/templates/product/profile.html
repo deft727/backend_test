@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container" style="max-width: 575.98px;" >
+   
+
+   <h1>{{request.user.username}}</h1>
+   {%if customer.customer.order_set.all%}
+<h5>orders</h5>
+{%for order in customer.customer.order_set.all%}
+_____________________________________ <br>
+<b>Order ID</b> : {{order.id}} <br>
+amount: {{order.amount}} $<br>
+status:  {{order.status }} <br>
+address:  {{order.address}} <br>
+_____________________________________ <br>
+
+{%endfor%}
+{%else%}
+<strong>you don`t have  orders</strong>
+{%endif%}
+</div>
+{% endblock %}
