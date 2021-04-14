@@ -13,6 +13,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.db import transaction
 from django.contrib.auth import get_user_model
+from .utils import MyMixin
 from .forms import OrderPayForm,OrderForm
 from .models import Order, Customer
 from cart.cart import Cart
@@ -20,7 +21,7 @@ from cart.cart import Cart
 User = get_user_model()
 
 
-class MakeOrderView(View):
+class MakeOrderView(MyMixin,View):
     def get(self, request, *args, **kwargs):
         form = OrderForm(request.POST or None)
         cart = Cart(request)
@@ -47,10 +48,7 @@ class MakeOrderView(View):
         if form.is_valid():
             new_order = form.save(commit=False)
             new_order.customer = request.user.customer
-            price = 0
-            for key,value in cartdetail.items():
-                price+= int(value['price'][:-3])
-            new_order.amount= price
+            new_order.amount= self.get_final_price()
             new_order.save()
             cart.clear()
             messages.add_message(request,messages.SUCCESS,'thanks for order')
